@@ -1,0 +1,145 @@
+---
+export interface Step {
+  title: string;
+  body: string;
+}
+export interface Benefit {
+  title: string;
+  body: string;
+}
+export interface UseCase {
+  title: string;
+  body: string;
+}
+export interface Faq {
+  q: string;
+  a: string;
+}
+
+export interface Props {
+  howItWorksTitle: string;
+  steps: Step[];
+  benefitsTitle: string;
+  benefitsIntro: string;
+  benefits: Benefit[];
+  useCasesTitle: string;
+  useCases: UseCase[];
+  faqTitle: string;
+  faqs: Faq[];
+}
+
+const {
+  howItWorksTitle,
+  steps,
+  benefitsTitle,
+  benefitsIntro,
+  benefits,
+  useCasesTitle,
+  useCases,
+  faqTitle,
+  faqs,
+} = Astro.props;
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": faqs.map((f) => ({
+    "@type": "Question",
+    "name": f.q,
+    "acceptedAnswer": { "@type": "Answer", "text": f.a },
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<section class="section">
+  <h2>{howItWorksTitle}</h2>
+  <ol class="steps">
+    {steps.map((s, i) => (
+      <li>
+        <span class="step-num">{i + 1}</span>
+        <div>
+          <strong>{s.title}</strong>
+          <p>{s.body}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section class="section">
+  <h2>{benefitsTitle}</h2>
+  <p class="intro">{benefitsIntro}</p>
+  <ul class="benefits">
+    {benefits.map((b) => (
+      <li>
+        <strong>{b.title}</strong>
+        <p>{b.body}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="section">
+  <h2>{useCasesTitle}</h2>
+  <ul class="use-cases">
+    {useCases.map((u) => (
+      <li>
+        <strong>{u.title}</strong>
+        <p>{u.body}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="section">
+  <h2>{faqTitle}</h2>
+  <div class="faq">
+    {faqs.map((f) => (
+      <details>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+</section>
+
+<style>
+  @reference "../styles/global.css";
+
+  .section {
+    @apply max-w-xl w-full mx-auto mt-14 text-body text-sm leading-7;
+  }
+  .section h2 {
+    @apply font-display text-ink text-xl mb-3 font-medium;
+  }
+  .intro { @apply mb-4; }
+
+  .steps { @apply list-none m-0 p-0 flex flex-col gap-4; }
+  .steps li { @apply flex gap-3.5; }
+  .step-num {
+    @apply shrink-0 w-7 h-7 rounded-full bg-primary/15 border border-primary/30 text-primary grid place-items-center text-xs font-semibold font-sans;
+  }
+  .steps strong { @apply text-ink font-medium; }
+  .steps p { @apply mt-0.5 mb-0; }
+
+  .benefits, .use-cases { @apply list-none m-0 p-0 flex flex-col gap-3.5; }
+  .benefits strong, .use-cases strong { @apply text-ink font-medium; }
+  .benefits p, .use-cases p { @apply mt-0.5 mb-0; }
+
+  .faq { @apply flex flex-col gap-2; }
+  .faq details {
+    @apply border border-hairline rounded-lg px-4 py-3 bg-surface-soft;
+  }
+  .faq summary {
+    @apply cursor-pointer font-medium text-ink text-sm list-none flex items-center justify-between gap-3;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after {
+    content: "+";
+    @apply text-primary text-lg font-normal shrink-0;
+  }
+  .faq details[open] summary::after { content: "\2212"; }
+  .faq p { @apply mt-2.5 mb-0; }
+</style>

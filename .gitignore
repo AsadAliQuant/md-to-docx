@@ -1,0 +1,11 @@
+venv/
+uploads/
+outputs/
+__pycache__/
+*.pyc
+.gstack/
+.claude/
+CLAUDE.md
+AGENTS.md
+DESIGN.md
+MISC_unused/

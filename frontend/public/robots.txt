@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://free-md-to-docx.pages.dev/sitemap.xml

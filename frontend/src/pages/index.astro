@@ -1,0 +1,169 @@
+---
+import '../styles/global.css';
+import ConverterWidget from '../components/ConverterWidget.astro';
+import PageSections from '../components/PageSections.astro';
+
+const SITE = 'https://free-md-to-docx.pages.dev';
+
+const faqs = [
+  {
+    q: 'Is this actually free?',
+    a: "Yes — every conversion is free, with no signup, no watermark, and no hidden per-file limit beyond the size caps below. There's no premium tier holding back a feature.",
+  },
+  {
+    q: 'Where are my files processed — is it private?',
+    a: "Your files are uploaded over HTTPS to our conversion server and processed there with Pandoc — this isn't a browser-only tool. We don't read, inspect, or store the contents of your documents. Uploaded source files are deleted the moment conversion finishes, and the converted output is removed right after your download completes. If you're converting something highly sensitive, running Pandoc locally on your own machine is the safest option.",
+  },
+  {
+    q: 'What Markdown syntax is supported?',
+    a: "Everything Pandoc's Markdown reader understands: headings, bold/italic, ordered and unordered lists (including nested), tables, code blocks and inline code, blockquotes, links, images, and horizontal rules. Each converts to its native Word equivalent — headings become Word heading styles, tables become real Word tables, and so on.",
+  },
+  {
+    q: 'Is there a file size limit?',
+    a: 'Each file can be up to 25 MB, and a single upload batch can total up to 200 MB. That covers even long, image-heavy Markdown documents — most .md files are a few hundred KB.',
+  },
+  {
+    q: 'Can I convert more than one file at once?',
+    a: "Yes. Drop as many files as you like in a single batch and they'll convert together; more than one file comes back as a single .zip with each document inside, named after its source file. Plenty of similar tools cap you at one file at a time — this one doesn't.",
+  },
+  {
+    q: 'Can I use the converted document commercially?',
+    a: "Yes. The .docx we hand back is a plain Word document with no license restrictions attached — the content and formatting are entirely yours to use, edit, publish, or sell.",
+  },
+  {
+    q: "Why would I want a .docx instead of just keeping the Markdown?",
+    a: 'Markdown is great for writing, but most non-technical collaborators — clients, managers, reviewers — live in Word. Converting gives you native heading styles, track-changes-ready formatting, and a file every reviewer already knows how to open and comment on.',
+  },
+  {
+    q: 'What happens to code blocks, tables, and links?',
+    a: "Code blocks convert with monospace formatting preserved (though Word doesn't syntax-highlight code the way an editor does). Tables become real, editable Word tables. Links stay clickable. Images referenced in your Markdown are embedded in the resulting document.",
+  },
+];
+---
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Markdown to Word Converter — Free .md to .docx | md-to-docx</title>
+<meta name="description" content="Convert Markdown (.md, .markdown, .txt) files to Word (.docx) online, free. Drag, drop, and batch-convert — powered by Pandoc, no signup, no file limit." />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="canonical" href={`${SITE}/`} />
+<meta name="generator" content={Astro.generator} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="md-to-docx" />
+<meta property="og:title" content="Markdown to Word Converter — Free & Instant" />
+<meta property="og:description" content="Convert Markdown files to Word documents online, free. Drag and drop single or bulk files — powered by Pandoc, no signup." />
+<meta property="og:url" content={`${SITE}/`} />
+<meta property="og:image" content={`${SITE}/og-image.png`} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Markdown to Word Converter — Free & Instant" />
+<meta name="twitter:description" content="Convert Markdown files to Word documents online, free — powered by Pandoc, no signup." />
+<meta name="twitter:image" content={`${SITE}/og-image.png`} />
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "md-to-docx — Markdown to Word Converter",
+  "url": `${SITE}/`,
+  "applicationCategory": "Utility",
+  "operatingSystem": "Any",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "description": "Free online tool to convert Markdown (.md, .markdown, .txt) files to Word (.docx) documents, powered by Pandoc. Supports single files and bulk batches.",
+  "featureList": [
+    "Convert .md, .markdown, and .txt to .docx",
+    "Bulk / batch conversion with ZIP download",
+    "No signup or account required",
+    "Powered by Pandoc",
+  ],
+})} />
+
+<style>
+  @reference "../styles/global.css";
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    @apply m-0 text-ink bg-canvas flex flex-col items-center p-6 antialiased;
+  }
+
+  .app { width: 100%; max-width: 640px; }
+
+  .brand {
+    @apply flex items-center gap-3 justify-center mb-5 text-muted text-[13px] tracking-wide uppercase font-semibold;
+  }
+  .brand-dot { @apply w-2 h-2 rounded-full bg-primary; }
+
+  h1 {
+    @apply font-display font-medium text-[28px] leading-tight tracking-[-0.3px] mb-1.5 text-ink;
+  }
+  .sub { @apply text-body mb-6 text-sm leading-relaxed; }
+  .sub code { @apply font-mono text-[13px] bg-surface-card px-1.5 py-0.5 rounded; }
+
+  .footer { @apply mt-4.5 text-center text-muted text-xs; }
+  .footer .dot { @apply opacity-50 mx-1.5; }
+  .footer a { @apply text-primary underline underline-offset-2 font-semibold; }
+
+  @media (max-width: 480px) {
+    h1 { @apply text-xl; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>md-to-docx</span>
+    </div>
+
+    <h1>Convert Markdown to Word</h1>
+    <p class="sub">Drop in one Markdown file or a whole folder's worth. Headings, lists, tables, and code blocks all come out the other side as a properly formatted Word document — no formatting to fix, no software to install.</p>
+
+    <ConverterWidget
+      accept=".md,.markdown,.txt"
+      extPattern="\.(md|markdown|txt)$"
+      outputExt=".docx"
+      dropTitle="Drop your Markdown files here"
+      dropFormats=".md, .markdown, .txt"
+      convertLabelSingle="Convert to DOCX"
+      otherFormat={{ label: 'Word', href: '/docx-to-md/', pattern: '\\.docx$' }}
+    />
+
+    <div class="footer">
+      Free &amp; unlimited <span class="dot">·</span> Powered by Pandoc <span class="dot">·</span> No signup
+      <span class="dot">·</span> Need the reverse? <a href="/docx-to-md/">Convert Word to Markdown →</a>
+    </div>
+
+    <PageSections
+      howItWorksTitle="How it works"
+      steps={[
+        { title: 'Drop your files', body: 'Drag .md, .markdown, or .txt files into the box above, or click to browse. One file or a hundred — batches convert together.' },
+        { title: 'Pandoc does the formatting', body: 'Your files are sent to our conversion service, where Pandoc — the open-source standard for document conversion — rebuilds every heading, list, table, and code block as native Word formatting.' },
+        { title: 'Download your .docx', body: 'A single file downloads immediately. Batches come back as one .zip, each document named after its source file.' },
+      ]}
+      benefitsTitle="Built for people who write in Markdown and have to hand in Word"
+      benefitsIntro="md-to-docx converts Markdown files to Microsoft Word (.docx) documents using Pandoc, the standard open-source document converter — upload one file or a whole batch, and headings, lists, tables, code blocks, links, and images all carry over."
+      benefits={[
+        { title: 'Real batch conversion', body: "Upload ten files or a hundred at once. Most free converters make you do this one at a time — this one doesn't." },
+        { title: 'Nothing to install', body: 'No Word plugin, no VS Code extension, no command line. Open a browser tab, drop your files, done.' },
+        { title: 'Formatting survives the trip', body: "Headings map to Word's heading styles, tables stay tables, code blocks keep their monospace formatting, and links stay clickable." },
+        { title: 'No account, no watermark', body: "We don't ask for an email address and we don't stamp your document. The .docx you get is yours, unmarked, and ready to send." },
+        { title: 'Open-source engine underneath', body: 'Conversion runs on Pandoc, the same tool technical writers and academic publishers have trusted for two decades — not a black-box in-house parser.' },
+        { title: "Your files don't linger", body: 'Uploaded files are removed the moment conversion finishes, and converted output is deleted right after your download completes.' },
+      ]}
+      useCasesTitle="Who this is for"
+      useCases={[
+        { title: 'Technical documentation', body: 'Write your README, API docs, or runbooks in Markdown, then hand a client or manager a Word doc they can comment on.' },
+        { title: 'Reports & project updates', body: 'Draft status updates and reports in your editor of choice, export clean .docx for whoever needs it in Word.' },
+        { title: 'Academic & research writing', body: 'Turn Markdown lecture notes, papers, or thesis chapters into Word documents for submission or peer review.' },
+        { title: 'Business & client deliverables', body: 'Send proposals, contracts, or briefs as a proper Word file, even if you wrote the whole thing in a plain text editor.' },
+        { title: 'Team handoffs', body: 'Engineering and product teams write in Markdown; everyone else works in Word. This is the bridge between the two.' },
+        { title: 'Content & copywriting', body: 'Draft articles and long-form content in Markdown for speed, then deliver the final .docx a client or CMS expects.' },
+      ]}
+      faqTitle="Frequently asked questions"
+      faqs={faqs}
+    />
+  </div>
+</body>
+</html>

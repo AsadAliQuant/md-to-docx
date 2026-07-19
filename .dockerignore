@@ -1,0 +1,15 @@
+venv/
+uploads/
+outputs/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+frontend/
+start.bat
+README.md
+CLAUDE.md
+AGENTS.md
+DESIGN.md
+.claude/
+MISC_unused/
